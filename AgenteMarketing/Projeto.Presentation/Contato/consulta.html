@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html ng-app="appConsulta">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+
+  <!--  <script src="../Scripts/jquery-3.0.0.min.js"></script>-->
+    <script src="../Scripts/bootstrap.min.js"></script>
+
+    <script src="../Scripts/angular.min.js"></script>
+
+    <script>
+
+        var app = angular.module('appConsulta', []);
+        app.controller('consultaController',
+            function ($scope, $http) {
+
+                //função para executar o serviço de consulta da API..
+                // consultar contatos
+                $scope.consultar = function () {
+
+                    $http.get("https://localhost:44371/api/contato/consultar")
+                        .then(function (obj) {
+                            $scope.contatos = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para executar o serviço de consulta da API..
+                // consultar vendacontato
+                $scope.consultarVenda = function () {
+
+                    $http.get("https://localhost:44371/api/vendacontato/consultar")
+                        .then(function (obj) {
+                         
+                            $scope.vendacontatos = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para executar o serviço de consulta da API..
+                // consultar vendacontato
+                $scope.consultarVendadetalhe = function () {
+
+                    $http.get("https://localhost:44371/api/vendadetalhecontato/consultar")
+                        .then(function (obj) {
+
+                            $scope.vendadetalhe = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+           
+                //função para executar o serviço de consulta da API..
+                // consultar vendacontato
+                $scope.consultarproduto = function () {
+
+                    $http.get("https://localhost:44371/api/produto/consultar")
+                        .then(function (obj) {
+
+                            $scope.produto = obj.data;  
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+
+            });
+
+    </script>
+
+</head>
+<body class="container" ng-controller="consultaController">
+
+    <h2>Consulta de Contatos</h2>
+    <a href="/index.html">Página inicial</a>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>Filtrar Contatos:</label>
+            <input type="text" class="form-control"
+                   placeholder="Digite aqui" ng-model="filtropesquisa" />
+        </div>
+    </div>
+
+    <br />
+
+    <div>
+        <strong>{{mensagem}}</strong>
+    </div>
+
+    <table class="table table-bordered" ng-init="consultar()">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome do Contato</th>
+                <th>Sexo</th>
+                <th>CPF</th>
+                <th>Data de Nascimento</th>
+                <th>Data de Cadastro</th>
+                <th>Email</th>
+                <th>Vendas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="f in contatos | filter: filtropesquisa | orderBy : ordenacao">
+                <td>{{f.ContatoID}}</td>
+                <td>{{f.Nome}}</td>
+                <td>{{f.Sexo}}</td>
+                <td>{{f.CPF}}</td>
+                <td>{{f.DataNascimento | date : 'dd/MM/yyyy'}}</td>
+                <td>{{f.DataCadastro}}</td>
+                <td>{{f.email}}</td>
+                <td>
+                  <input type="checkbox" ng-model="checked" aria-label="Toggle ngShow">
+                    <div class="check-element animate-show-hide" ng-show="checked">
+                     
+                    <table class="table table-bordered" ng-init="consultarVenda()">
+                        <tr>
+                            <td>Id Venda</td>
+                            <td>Data Venda</td>
+                            <td>Valor</td>
+                            <td>Produto</td>
+                        </tr>
+                        <tbody>
+
+                            <tr ng-repeat="c in vendacontatos | filter : {'ContatoID' : f.ContatoID} ">
+                                <td>{{c.VendaContatoID}}</td>
+                                <td>{{c.DataVenda}}</td>
+                                <td>{{c.Valor}}</td>
+                                <td>
+                                    <input type="checkbox" ng-model="checked1" aria-label="Toggle ngShow">
+                                    <div class="check-element animate-show-hide" ng-show="checked1">
+
+                                        <table class="table table-bordered" ng-init="consultarVendadetalhe()">
+                                            <tr>
+                                                <td>Id Produto</td>
+                                                <td>Nome</td>
+                                                <td>Quantidade</td>
+                                                <td>Valor</td>
+                                            </tr>
+                                            <tbody>
+                                                <tr ng-repeat="vd in vendadetalhe | filter : {'VendaContatoId' : c.VendaContatoID} ">
+                                                    <td>{{vd.ProdutoId}}</td>
+                                                    <td>
+                                                        <table ng-init="consultarproduto()">
+                                                            <tr ng-repeat="pp in produto | filter : {'ProdutoID' : vd.ProdutoId} ">
+                                                                <td>{{pp.NomeProduto}}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td>{{vd.Quantidade}}</td>
+                                                    <td>{{vd.Valor}}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                     </dib>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                     </div>
+                 
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    Quantidade de Contatos:
+                    {{(contatos | filter: filtropesquisa).length}}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+ 
+</body>
+</html>

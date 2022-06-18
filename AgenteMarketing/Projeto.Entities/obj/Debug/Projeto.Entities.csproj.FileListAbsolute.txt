@@ -1,0 +1,6 @@
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\bin\Debug\Projeto.Entities.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\bin\Debug\Projeto.Entities.pdb
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\obj\Debug\Projeto.Entities.csprojAssemblyReference.cache
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\obj\Debug\Projeto.Entities.csproj.CoreCompileInputs.cache
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\obj\Debug\Projeto.Entities.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Entities\obj\Debug\Projeto.Entities.pdb

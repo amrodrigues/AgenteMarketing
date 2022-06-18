@@ -1,0 +1,14 @@
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\obj\Debug\Projeto.Repository.csprojAssemblyReference.cache
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\obj\Debug\Projeto.Repository.csproj.CoreCompileInputs.cache
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\Projeto.Repository.dll.config
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\Projeto.Repository.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\Projeto.Repository.pdb
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\EntityFramework.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\Projeto.Entities.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\Projeto.Entities.pdb
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\EntityFramework.xml
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\obj\Debug\Projeto.Repository.csproj.CopyComplete
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\obj\Debug\Projeto.Repository.dll
+C:\Users\amrod\source\repos\AgenteMarketing\Projeto.Repository\obj\Debug\Projeto.Repository.pdb
