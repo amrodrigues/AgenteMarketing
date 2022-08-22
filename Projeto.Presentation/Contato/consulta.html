@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html ng-app="appConsulta">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery-3.0.0.min.js"></script>
+    <script src="../Scripts/bootstrap.min.js"></script>
+
+    <script src="../Scripts/angular.min.js"></script>
+
+    <script>
+
+        var app = angular.module('appConsulta', []);
+        app.controller('consultaController',
+            function ($scope, $http) {
+
+                //função para executar o serviço de consulta da API..
+                // consultar contatos
+                $scope.consultar = function () {
+
+                    $http.get("https://localhost:44371/api/contato/consultar")
+                        .then(function (obj) {
+                            $scope.contatos = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para executar o serviço de consulta da API..
+                // consultar contatos
+                $scope.consultarporid = function (id) {
+               
+                    $http.get("https://localhost:44371/api/contato/consultarporid?id="+id)
+                        .then(function (obj) {
+                            $scope.model = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para excluir o contato
+                $scope.excluir = function () {
+                    $http.delete("https://localhost:44371/api/contato/excluir?id=" + $scope.model.ContatoID)
+                        .then(function (obj) {
+
+                            $scope.mensagem = obj.data.Mensagem;
+                            $scope.consultar();
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem;
+                        });
+                };
+
+                //função para atualizar o contato
+                $scope.atualizar = function () {
+
+                    $http.put("https://localhost:44371/api/contato/atualizar", $scope.model)
+                        .then(function (obj) {
+                            $scope.mensagem = obj.data.Mensagem;
+                            $scope.consultar();
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem;
+                        });
+                };
+
+  
+            });
+
+    </script>
+
+</head>
+<body class="container" ng-controller="consultaController">
+
+    <h2>Consulta de Contatos</h2>
+    <a href="/index.html">Página inicial</a>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>Filtrar Contatos:</label>
+            <input type="text" class="form-control"
+                   placeholder="Digite aqui" ng-model="filtropesquisa" />
+        </div>
+    </div>
+
+    <br />
+
+    <div>
+        <strong>{{mensagem}}</strong>
+    </div>
+
+    <table class="table table-bordered" ng-init="consultar()">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome do Contato</th>
+                <th>Sexo</th>
+                <th>CPF</th>
+                <th>Dt Nasc</th>
+                <th>Dt Cadastro</th>
+                <th>Email</th>
+                <th>Compras</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="f in contatos | filter: filtropesquisa | orderBy : ordenacao">
+                <td>{{f.ContatoID}}</td>
+                <td>{{f.Nome}}</td>
+                <td>{{f.Sexo}}</td>
+                <td>{{f.CPF}}</td>
+                <td>{{f.DataNascimento | date : 'dd/MM/yyyy'}}</td>
+                <td>{{f.DataCadastro  | date : 'dd/MM/yyyy'}}</td>
+                <td>{{f.email}}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm"
+                            data-target="#janelaedicao"
+                            data-toggle="modal"
+                            ng-click="consultarporid(f.ContatoID)">
+                        Atualizar
+                    </button>
+
+                    <button class="btn btn-danger btn-sm"
+                            data-target="#janelaexclusao"
+                            data-toggle="modal"
+                            ng-click="consultarporid(f.ContatoID)">
+                        Excluir
+                    </button>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="8">
+                    Quantidade de Contatos:
+                    {{(contatos | filter: filtropesquisa).length}}
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div id="janelaedicao" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="text-white">Atualizar </h4>
+                </div>
+                <div class="modal-body">
+                    Código: <label>{{model.ContatoID}}</label>
+                    <br />
+
+                    <label>Nome do Contato:</label>
+                    <input type="text" class="form-control"
+                           placeholder="Digite aqui"
+                           ng-model="model.Nome" />
+                    <br />
+
+                    <label>CPF:</label>
+                    <input type="text" class="form-control"
+                           placeholder="Digite aqui"
+                           ng-model="model.CPF" />
+                    <br />
+
+                    <label>Sexo:</label>
+                    <select class="form-control" ng-model="model.Sexo">
+                        <option value="F">Feminino</option>
+                        <option value="M">Masculino</option>
+                        <option value="O">Outros</option>
+                    </select>
+                    <br />
+
+                    <label>Data de Nascimento:</label>
+                    <input type="text" class="form-control"
+                           placeholder="Digite aqui"
+                           ng-model="model.DataNascimento" />
+                    <br />
+
+                    <label>Data de Cadastro:</label>
+                    <input type="text" class="form-control"
+                           placeholder="Digite aqui"
+                           ng-model="model.DataCadastro" />
+                    <br />
+
+                    <label>Email:</label>
+                    <input type="text" class="form-control"
+                           placeholder="Digite aqui"
+                           ng-model="model.email" />
+                    <br />
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" ng-click="atualizar()">Atualizar Dados</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+
+                </div>
+                  
+            </div>
+        </div>
+    </div>
+
+    <div id="janelaexclusao" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="text-white">Produtos</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    Código: <label>{{model.ContatoID}}</label>
+                    <br />
+
+                    Nome do Contato: <label>{{model.Nome}}</label>
+                    <br />
+
+                    CPF: <label>{{model.CPF}}</label>
+                    <br />
+
+                    Sexo: <label>{{model.Sexo}}</label>
+                    <br />
+
+                    Data de Nascimento: <label>{{model.DataNascimento | date : 'dd/MM/yyyy'}}</label>
+                    <br />
+
+                    Data de Cadastro: <label>{{model.DataCadastro | date : 'dd/MM/yyyy'}}</label>
+                    <br />
+
+                    Email: <label>{{model.email}}</label>
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="excluir()"> Confirmar Exclusão</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

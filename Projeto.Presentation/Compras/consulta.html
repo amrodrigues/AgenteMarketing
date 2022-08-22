@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html ng-app="appConsulta">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery-3.0.0.min.js"></script>
+    <script src="../Scripts/bootstrap.min.js"></script>
+
+    <script src="../Scripts/angular.min.js"></script>
+
+    <script>
+
+        var app = angular.module('appConsulta', []);
+        app.controller('consultaController',
+            function ($scope, $http) {
+
+                //função para executar o serviço de consulta da API..
+                // consultar contatos
+                $scope.consultar = function () {
+
+                    $http.get("https://localhost:44371/api/contato/consultar")
+                        .then(function (obj) {
+                            $scope.contatos = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para executar o serviço de consulta da API..
+                // consultar vendacontato
+                $scope.consultarVenda = function (id, nome) {
+                    $scope.model = nome;
+
+                    $http.get("https://localhost:44371/api/vendacontato/consultarporcontato?id=" + id)
+                        .then(function (obj) {
+
+                            $scope.vendacontatos = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                //função para executar o serviço de consulta da API..
+                // consultar vendacontato
+                $scope.consultarVendadetalhe = function (id) {
+                    $http.get("https://localhost:44371/api/vendadetalhecontato/consultarporid?id=" + id)
+                        .then(function (obj) {
+
+                            $scope.vendadetalhe = obj.data;
+                        })
+                        .catch(function (e) {
+                            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                        });
+                };
+
+                ////função para executar o serviço de consulta da API..
+                //// consultar vendacontato
+                //$scope.consultarproduto = function () {
+
+                //    $http.get("https://localhost:44371/api/produto/consultar")
+                //        .then(function (obj) {
+
+                //            $scope.produto = obj.data;
+                //        })
+                //        .catch(function (e) {
+                //            $scope.mensagem = e.data.Mensagem; //mensagem de erro..
+                //        });
+                //};
+
+
+            });
+
+    </script>
+
+</head>
+<body class="container" ng-controller="consultaController">
+
+    <h2>Consulta Compras</h2>
+    <a href="/index.html">Página inicial</a>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>Filtrar Contatos:</label>
+            <input type="text" class="form-control"
+                   placeholder="Digite aqui" ng-model="filtropesquisa" />
+        </div>
+    </div>
+
+    <br />
+
+    <div>
+        <strong>{{mensagem}}</strong>
+    </div>
+
+    <table class="table table-bordered" ng-init="consultar()">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome do Contato</th>
+                <th>Sexo</th>
+                <th>CPF</th>
+                <th>Dt Nasc</th>
+                <th>Dt Cadastro</th>
+                <th>Email</th>
+                <th>Compras</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="f in contatos | filter: filtropesquisa | orderBy : ordenacao">
+                <td>{{f.ContatoID}}</td>
+                <td>{{f.Nome}}</td>
+                <td>{{f.Sexo}}</td>
+                <td>{{f.CPF}}</td>
+                <td>{{f.DataNascimento | date : 'dd/MM/yyyy'}}</td>
+                <td>{{f.DataCadastro  | date : 'dd/MM/yyyy'}}</td>
+                <td>{{f.email}}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm"
+                            data-toggle="modal" data-target="#janelacompras" ng-click="consultarVenda(f.ContatoID ,f.Nome)">
+                        Visualizar
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="8">
+                    Quantidade de Contatos:
+                    {{(contatos | filter: filtropesquisa).length}}
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div id="janelacompras" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="text-white">Compras {{model}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Id Venda</td>
+                            <td>Data Venda</td>
+                            <td>Valor</td>
+                            <td>Produto</td>
+                        </tr>
+                        <tbody>
+
+                            <tr ng-repeat="c in vendacontatos">
+                                <td>{{c.VendaContatoID}}</td>
+                                <td>{{c.DataVenda | date : 'dd/MM/yyyy'}}</td>
+                                <td>{{c.Valor | currency : 'R$'}}</td>
+
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                            data-toggle="modal" data-target="#janelaproduto" ng-click="consultarVendadetalhe(c.VendaContatoID)">
+                                        Visualizar
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="janelaproduto" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="text-white">Produtos</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Id Produto</td>
+                            <td>Nome</td>
+                            <td>Qtd</td>
+                            <td>Valor</td>
+                        </tr>
+                        <tbody>
+                            <tr ng-repeat="vd in vendadetalhe">
+                                <td>{{vd.ProdutoId}}</td>
+                                <td>{{vd.Produto.NomeProduto}}</td>
+                                <td>{{vd.Quantidade}}</td>
+                                <td>{{vd.Valor | currency : 'R$'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>
